@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#000000" />
+            <padding
+                android:left="0dip"
+                android:top="0dip"
+                android:right="0dip"
+                android:bottom="0dip" />
+        </shape>
+    </item>
+    <item android:right="0dp"
+          android:left="0dp"
+          android:bottom="0dp"
+          android:top="0dp">
+        <bitmap android:src="@drawable/ic_splash"
+            android:gravity="center"  />
+    </item>
+
+    <item android:bottom="80dp">
+        <bitmap android:src="@drawable/ic_splash_legal"
+            android:gravity="bottom" />
+    </item>
+</layer-list>

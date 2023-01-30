@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                        xmlns:prism="clr-namespace:Prism.DryIoc;assembly=Prism.DryIoc.Forms"
+                        xmlns:resources="clr-namespace:RvLinkDeviceTester.Resources"
+                        xmlns:fontAwesome="clr-namespace:RvLinkDeviceTester.Resources.FontAwesome"
+                        xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+                        x:Class="RvLinkDeviceTester.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <resources:Styles />
+            </ResourceDictionary.MergedDictionaries>
+            
+           <OnPlatform x:Key="FontAwesomeBrands" x:TypeArguments="x:String">
+                <On Platform="Android" Value="FontAwesome5BrandsRegular400.otf#Regular" />
+                <On Platform="iOS" Value="FontAwesome5Brands-Regular" />
+            </OnPlatform>
+
+            <OnPlatform x:Key="FontAwesomeSolid" x:TypeArguments="x:String">
+                <On Platform="Android" Value="FontAwesome5Solid.otf#Regular" />
+                <On Platform="iOS" Value="FontAwesome5Free-Solid" />
+            </OnPlatform>
+
+            <OnPlatform x:Key="FontAwesomeRegular" x:TypeArguments="x:String">
+                <On Platform="Android" Value="FontAwesome5ProRegular400.otf#Regular" />
+                <On Platform="iOS" Value="FontAwesome5Pro-Regular" />
+            </OnPlatform>
+
+            <ControlTemplate x:Key="DefaultPageControlTemplate">
+                <Grid BindingContext="{Binding Path=BindingContext, Source={RelativeSource TemplatedParent}}"                      
+                      RowDefinitions="Auto,*">
+                    <Grid ColumnDefinitions="45,*"
+                          ColumnSpacing="0"
+                          BackgroundColor="{DynamicResource PrimaryColor}"
+                          Padding="0,4,4,4"
+                          >
+                        <Button Command="{Binding GoBack}"
+                                FontFamily="{StaticResource FontAwesomeSolid}"
+                                FontSize="24"
+                                VerticalOptions="Center"
+                                BackgroundColor="Transparent"
+                                TextColor="{DynamicResource TextColorOnPrimary}"
+                                Text="{x:Static fontAwesome:Icon.FAChevronLeft}" />
+
+                        <Label Grid.Column="1" 
+                               Text="{Binding Title}"
+                               TextColor="{DynamicResource TextColorOnPrimary}"
+                               VerticalOptions="Center"
+                               FontSize="24" />
+                    </Grid>
+                    <ContentPresenter Grid.Row="1" BackgroundColor="{DynamicResource PageBackgroundColor}" />
+                </Grid>
+            </ControlTemplate>
+            
+            <ControlTemplate x:Key="MainPageControlTemplate">
+                <Grid BindingContext="{Binding Path=BindingContext, Source={RelativeSource TemplatedParent}}"                      
+                      RowDefinitions="Auto,*">
+                    <Grid ColumnDefinitions="*,56,56"
+                          BackgroundColor="{DynamicResource PrimaryColor}"
+                          Padding="12,4,4,4"
+                          ColumnSpacing="0">
+                        
+                        <Label Text="{Binding Title}"
+                               TextColor="{DynamicResource TextColorOnPrimary}"
+                               VerticalOptions="Center"
+                               FontSize="32" />
+                        
+                        <Button Grid.Column="1" 
+                                Command="{Binding AddCommand}"
+                                FontFamily="{StaticResource FontAwesomeSolid}"
+                                FontSize="24"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                BackgroundColor="Transparent"
+                                TextColor="{DynamicResource TextColorOnPrimary}"
+                                Text="{x:Static fontAwesome:Icon.FAPlus}" />
+                        
+                        <Button Grid.Column="2" 
+                                Command="{Binding GoToSettings}"
+                                FontFamily="{StaticResource FontAwesomeSolid}"
+                                FontSize="24"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End"
+                                BackgroundColor="Transparent"
+                                TextColor="{DynamicResource TextColorOnPrimary}"
+                                Text="{x:Static fontAwesome:Icon.FACog}" />
+
+                    </Grid>
+                    <ContentPresenter Grid.Row="1" BackgroundColor="{DynamicResource PageBackgroundColor}" />
+                </Grid>
+            </ControlTemplate>
+            
+            <!--IMPLICIT STYLES-->
+            <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+                <Setter Property="NavigationPage.HasNavigationBar" Value="False" />
+                <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}" />
+                <Setter Property="ControlTemplate" Value="{StaticResource DefaultPageControlTemplate}" />
+                <Setter Property="ios:Page.UseSafeArea" Value="True" />
+            </Style>
+
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="{StaticResource Rubik-Regular}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{DynamicResource TextColor}" />
+            </Style>
+
+            <Style TargetType="NavigationPage" ApplyToDerivedTypes="True">
+                <Setter Property="BarBackgroundColor" Value="Black" />
+                <Setter Property="BarTextColor" Value="White" />
+                <Setter Property="ios:NavigationPage.HideNavigationBarSeparator" Value="True" />
+            </Style>
+            
+        </ResourceDictionary>
+    </Application.Resources>
+</prism:PrismApplication>

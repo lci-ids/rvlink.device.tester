@@ -1,0 +1,10 @@
+
+steps:
+
+- task: NuGetCommand@2
+  displayName: 'Restore Nugets'
+  inputs:
+        command: 'restore'
+        restoreSolution: '$(solution-name)'
+        feedsToUse: 'select'
+        vstsFeed: 'f703c69c-2dfa-4eb0-bf6f-c5a65ea32777'

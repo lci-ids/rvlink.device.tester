@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms" 
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+                    x:Class="RvLinkDeviceTester.Resources.DarkColors">
+
+    <Color x:Key="PrimaryColor">Black</Color>
+    <Color x:Key="PrimaryColorVariant">#021019</Color>
+    <Color x:Key="SecondaryColor">#FFC000</Color>
+    <Color x:Key="SecondaryColorVariant"></Color>
+    <Color x:Key="TertiaryColor">#8BD92A</Color>
+    <Color x:Key="BackgroundColor">White</Color>
+    <Color x:Key="TextColor">Black</Color>
+    <Color x:Key="SurfaceColor">#F5F5F5</Color>
+    <Color x:Key="ErrorColor">Red</Color>
+    <Color x:Key="TextColorVariant">#8A898D</Color>
+    <Color x:Key="OnPrimaryColor">White</Color>
+    <Color x:Key="OnSecondaryColor">White</Color>
+    <Color x:Key="OnBackgroundColor">Black</Color>
+    <Color x:Key="OnErrorColor">White</Color>
+    <Color x:Key="ShadowColor1">#8A898D</Color>
+    <Color x:Key="ShadowColor2">#A9A5A5</Color>
+    <Color x:Key="ShadowColor3">#DCDCDC</Color>
+    <Color x:Key="ActionColor1">#10C6FF</Color>
+    <Color x:Key="ActionColor2">#7B3DFF</Color>
+
+</ResourceDictionary>

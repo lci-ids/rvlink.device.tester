@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms" 
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+                    xmlns:fonts="clr-namespace:RvLinkDeviceTester.Resources.Fonts" 
+                    xmlns:resources="clr-namespace:RvLinkDeviceTester.Resources"
+                    xmlns:denali="clr-namespace:RvLinkDeviceTester.Resources.Denali"
+                    x:Class="RvLinkDeviceTester.Resources.Styles">
+    <ResourceDictionary.MergedDictionaries>
+        <resources:LightColors />
+        <fonts:Fonts />
+        <resources:CommonColors />
+        <denali:Colors />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Color x:Key="DefaultTextColor">White</Color>
+    <Color x:Key="ShortcutCaretColor">Black</Color>
+    <Color x:Key="ShortcutShadowColor">#A9A5A5</Color>
+    <Color x:Key="ShortcutMiddleTextColor">#363636</Color>
+    <Color x:Key="ShortcutDetailTextColor">#7D7D7D</Color>
+    <Color x:Key="AccentColor">#FFC000</Color> <!-- OneControl-UI-Library depend on this color -->
+    <Color x:Key="SeparatorColor">#DCDCDC</Color>
+    <Color x:Key="LevelerStopButtonBackgroundColor">#FF0000</Color>
+    <Color x:Key="LevelerStepIconOuterCircleColor">#979797</Color>
+    <Color x:Key="LevelerStepIconInnerCircleColor">White</Color>
+    <Color x:Key="LevelerStepTextColor">Black</Color>
+    <Color x:Key="LevelerStepSuccessColor">#8BD92A</Color>
+    <Color x:Key="LevelerStepInProgressColor">#8BD92A</Color>
+
+    <x:String x:Key="MediumFont">Rubik-Medium</x:String>
+    <x:String x:Key="DefaultFont">Rubik-Normal</x:String>
+    <x:String x:Key="RubikMedium">Rubik-Medium</x:String>
+
+    <OnPlatform x:Key="FontAwesomeBrands" x:TypeArguments="x:String">
+        <On Platform="Android" Value="FontAwesome5BrandsRegular400.otf#Regular" />
+        <On Platform="iOS" Value="FontAwesome5Brands-Regular" />
+    </OnPlatform>
+
+    <OnPlatform x:Key="FontAwesomeSolid" x:TypeArguments="x:String">
+        <On Platform="Android" Value="FontAwesome5Solid.otf#Regular" />
+        <On Platform="iOS" Value="FontAwesome5Free-Solid" />
+    </OnPlatform>
+
+    <OnPlatform x:Key="FontAwesomeRegular" x:TypeArguments="x:String">
+        <On Platform="Android" Value="FontAwesome5ProRegular400.otf#Regular" />
+        <On Platform="iOS" Value="FontAwesome5Pro-Regular" />
+    </OnPlatform>
+</ResourceDictionary>

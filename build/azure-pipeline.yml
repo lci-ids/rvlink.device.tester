@@ -1,0 +1,127 @@
+variables:
+  BuildConfiguration: "Release"
+  solution-name: 'BleDeviceTester.sln'
+  android-project: "BleDeviceTester.Android.csproj"
+  android-project-path: "src/BleDeviceTester.Android"
+  ios-provisioning-profile: "BleDeviceTesterAdHoc.mobileprovision"
+
+  outputDirectory: "$(build.binariesdirectory)/$(BuildConfiguration)"
+
+trigger:
+  batch: "true"
+  branches:
+    include:
+      - main
+      - hotfix*
+      - release*
+
+pr:
+  branches:
+    include:
+      - main
+      - hotfix*
+      - release*
+stages:
+  - stage: Build
+    jobs:
+      #Build Android
+      - job: AndroidBuild
+        pool:
+          vmImage: "windows-2022"
+
+        steps:
+        #Build system setup
+        - template: build_tools_setup.yml
+
+        - template: common-tasks.yml
+
+
+        - task: XamarinAndroid@1
+          displayName: "Build Xamarin.Android - OneControl"
+          inputs:
+              projectFile: $(android-project-path)/$(android-project)
+              configuration: Release
+              msbuildVersionOption: latest
+              msbuildArchitectureOption: x64
+              msbuildArguments: '/p:AndroidNdkDirectory="$(AndroidNdkDirectory)" /p:AndroidSigningKeyStore="upload.keystore" /p:AndroidSigningKeyAlias="upload" /p:AndroidSigningKeyPass="Gtfoids27"'
+              jdkOption: 'JDKVersion'
+              jdkVersionOption: '1.11'
+
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: '$(Build.SourcesDirectory)\$(android-project-path)\bin\Release'
+            Contents: |
+                *.apk
+                *.aab
+            TargetFolder: "$(build.binariesdirectory)/$(BuildConfiguration)"
+
+        - task: PublishPipelineArtifact@1
+          displayName: "Publish Artifact"
+          inputs:
+            targetPath: $(build.binariesdirectory)/$(BuildConfiguration)
+            artifactName: "ble-tester-android-release" 
+          condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+      #Build iOS
+      - job: iOSBuild
+        pool: "Local MacOS" 
+
+        steps:
+        #Build system setup
+        - template: build_tools_setup.yml
+
+        - template: common-tasks.yml
+
+        - task: InstallAppleProvisioningProfile@1
+          displayName: "Install BleDeviceTester Profile"
+          name: "BleDeviceTesterProfile"
+          inputs:
+            provisioningProfileLocation: "secureFiles"
+            provProfileSecureFile: "$(ios-provisioning-profile)"
+
+        - task: Bash@3
+          displayName: "Build iOS"
+          inputs:
+              filePath: "build/mono-ios-build.sh"
+              arguments: '"$(solution-name)" "$(BuildConfiguration)" "iPhone" "$(outputDirectory)" "$(APPLE_CERTIFICATE_SIGNING_IDENTITY)" "$(BleDeviceTesterProfile.provisioningProfileUuid)"'
+
+        - task: CopyFiles@2
+          displayName: "Copy Files to: $(build.artifactstagingdirectory)"
+          inputs:
+              SourceFolder: "$(system.defaultworkingdirectory)"
+              Contents: |
+                **/OneControl*.ipa
+                **/$(ios-symbols)/**
+              TargetFolder: "$(build.artifactstagingdirectory)"
+
+        - task: PublishPipelineArtifact@1
+          displayName: "Publish Artifact"
+          inputs:
+            targetPath: $(build.artifactstagingdirectory)
+            artifactName: "ble-tester-ios-release" 
+          condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+          
+  - stage: Release
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    jobs:
+    - deployment: Developers
+      environment: Developers
+      strategy:
+        runOnce:    #rolling, canary are the other strategies that are supported
+          deploy:
+            steps:
+            
+            - task: DownloadPipelineArtifact@2
+              inputs:
+                artifactName: "ble-tester-android-release"
+                path: $(build.artifactstagingdirectory)
+
+            - task: AppCenterDistribute@3
+              displayName: 'Deploy $(System.DefaultWorkingDirectory)/**/com.lci1.BleDeviceTester.apk to Visual Studio App Center'
+              inputs:
+                serverEndpoint: AppCenter
+                appSlug: 'onecontrol-w4m3/BLE-Device-Tester-Android'
+                appFile: '$(build.artifactstagingdirectory)/**/com.lci1.BleDeviceTester.apk'
+                symbolsOption: Android
+                releaseNotesInput: 'TBD - Release Candidate'
+                isSilent: false

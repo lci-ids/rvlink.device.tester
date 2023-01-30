@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:viewModel="clr-namespace:RvLinkDeviceTester.UserInterface.Second;assembly=RvLinkDeviceTester"
+             x:Class="RvLinkDeviceTester.UserInterface.Second.SecondPage"
+             x:DataType="viewModel:SecondPageViewModel"
+             prism:ViewModelLocator.AutowireViewModel="True">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Welcome to Xamarin.Forms!"
+                   VerticalOptions="CenterAndExpand" 
+                   HorizontalOptions="CenterAndExpand" />
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Can Go Back" />
+                <Switch IsToggled="{Binding CanGoBack}" />
+            </StackLayout>
+            <ContentView VerticalOptions="FillAndExpand">
+                <Button VerticalOptions="End"
+                        Text="Go Back"
+                        Command="{Binding GoBack}" />
+            </ContentView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

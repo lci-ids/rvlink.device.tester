@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:viewModel="clr-namespace:RvLinkDeviceTester.UserInterface.AddAndManageDevices.MacAddressPair"
+             xmlns:fontawesome="clr-namespace:RvLinkDeviceTester.Resources.FontAwesome;assembly=RvLinkDeviceTester"
+             xmlns:autocomplete="clr-namespace:Syncfusion.SfAutoComplete.XForms;assembly=Syncfusion.SfAutoComplete.XForms"
+             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+             x:DataType="viewModel:MacAddressPairingPageViewModel"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="RvLinkDeviceTester.UserInterface.AddAndManageDevices.MacAddressPair.MacAddressPairingPage"
+             >
+    <ContentPage.Content>
+        <StackLayout>
+            <!-- State: Enter Mac Address -->
+            <Label 
+                Text="{x:Static fontawesome:Icon.FABluetooth}"
+                IsVisible="{Binding ShowWaitingForMacAddress}"
+                FontFamily="{StaticResource FontAwesomeBrands}"
+                HorizontalTextAlignment="Center"
+                Margin="20,80,20,20"
+                TextColor="{DynamicResource TextColor}"
+                FontSize="120" />
+
+            <Label 
+                Text="{Binding Title}"
+                IsVisible="{Binding ShowWaitingForMacAddress}"
+                FontAttributes="Bold"
+                FontSize="24"
+                TextColor="{DynamicResource TextColor}"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                Margin="20,40,20,20"
+                />
+            
+            <Label 
+                Text="Enter the Mac Address of the Bluetooth® device you wish to pair. Then press pair." 
+                IsVisible="{Binding ShowWaitingForMacAddress}"
+                
+                FontSize="16"
+                TextColor="{DynamicResource TextColor}"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                Margin="20"
+                />
+
+            <inputLayout:SfTextInputLayout
+                Hint="Enter Mac Address"
+                FocusedColor="{DynamicResource TextColorVariant}"
+                UnfocusedColor="{DynamicResource TextColorVariant}"
+                ContainerType="Outlined"
+                OutlineCornerRadius="5"
+                Margin="20"
+                IsVisible="{Binding ShowWaitingForMacAddress}">
+                <autocomplete:SfAutoComplete
+                    ShowSuggestionsOnFocus="true"
+                    AutoCompleteMode="Suggest"
+                    SuggestionMode="Contains"
+                    DataSource="{Binding MacHistory}"
+                    Text="{Binding MacAddressEntered}" />
+            </inputLayout:SfTextInputLayout>
+
+            <Button
+                Text="Pair"
+                IsVisible="{Binding ShowWaitingForMacAddress}"
+                
+                Command="{Binding Pair}"
+                TextColor="{DynamicResource BackgroundColor}"
+                BackgroundColor="{DynamicResource TextColor}"
+                VerticalOptions="EndAndExpand"
+                WidthRequest="200"
+                HeightRequest="50"
+                CornerRadius="25"
+                FontSize="20"
+                Margin="20"
+                />
+
+            <!-- State: Connecting -->
+            <Label 
+                Text="{x:Static fontawesome:Icon.FABluetooth}"
+                IsVisible="{Binding ShowConnecting}"
+                FontFamily="{StaticResource FontAwesomeBrands}"
+                HorizontalTextAlignment="Center"
+                Margin="20,80,20,20"
+                TextColor="{DynamicResource TextColor}"
+                FontSize="120" />
+
+            <Label 
+                Text="Pairing"
+                IsVisible="{Binding ShowConnecting}"
+                FontAttributes="Bold"
+                FontSize="24"
+                TextColor="{DynamicResource TextColor}"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                Margin="20,40,20,20"
+                />
+
+            <Label 
+                Text="BLE Device Tester is attempting to pair with a device matching the Mac Address entered." 
+                IsVisible="{Binding ShowConnecting}"
+                
+                FontSize="16"
+                TextColor="{DynamicResource TextColor}"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                Margin="20"
+                />
+
+            <!-- State: Connected -->
+            <Label 
+                Text="{x:Static fontawesome:Icon.FACheckBoxCircle}"
+                IsVisible="{Binding ShowConnected}"
+                FontFamily="{StaticResource FontAwesomeRegular}"
+                HorizontalTextAlignment="Center"
+                Margin="20,80,20,20"
+                TextColor="{DynamicResource TertiaryColor}"
+                FontSize="120" />
+
+            <Label 
+                Text="Pairing Successful"
+                IsVisible="{Binding ShowConnected}"
+                FontAttributes="Bold"
+                FontSize="24"
+                TextColor="{DynamicResource TextColor}"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                Margin="20,40,20,20"
+                />
+
+            <Label 
+                Text="BLE Device Tester successfully paired to your device!" 
+                IsVisible="{Binding ShowConnected}"
+                
+                FontSize="16"
+                TextColor="{DynamicResource TextColor}"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                Margin="20"
+                />
+
+            <Button
+                Text="Return Home"
+                IsVisible="{Binding ShowConnected}"
+                Command="{Binding ReturnHome}"
+                TextColor="{DynamicResource BackgroundColor}"
+                BackgroundColor="{DynamicResource TextColor}"
+                WidthRequest="200"
+                HeightRequest="50"
+                CornerRadius="25"
+                FontSize="20"
+                Margin="20"
+                VerticalOptions="EndAndExpand"
+                />
+
+            <!-- State: Error -->
+            <Label 
+                Text="{x:Static fontawesome:Icon.FACircleExclamation}"
+                IsVisible="{Binding ShowError}"
+                FontFamily="{StaticResource FontAwesomeSolid}"
+                HorizontalTextAlignment="Center"
+                Margin="20,80,20,20"
+                TextColor="{DynamicResource ErrorColor}"
+                FontSize="120" />
+
+            <Label 
+                Text="Pairing Failed"
+                IsVisible="{Binding ShowError}"
+                FontAttributes="Bold"
+                FontSize="24"
+                TextColor="{DynamicResource TextColor}"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                Margin="20,40,20,20"
+                />
+
+            <Label 
+                Text="{Binding ErrorMessage}" 
+                IsVisible="{Binding ShowError}"
+                
+                FontSize="16"
+                TextColor="{DynamicResource ErrorColor}"
+                VerticalTextAlignment="Start"
+                HorizontalTextAlignment="Center"
+                Margin="20"
+                />
+
+            <Button
+                Text="Retry"
+                IsVisible="{Binding ShowError}"
+                Command="{Binding Retry}"
+                TextColor="{DynamicResource BackgroundColor}"
+                BackgroundColor="{DynamicResource TextColor}"
+                WidthRequest="200"
+                HeightRequest="50"
+                CornerRadius="25"
+                FontSize="20"
+                VerticalOptions="EndAndExpand"
+                Margin="20"
+                />
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

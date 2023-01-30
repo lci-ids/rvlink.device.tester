@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item>
+    <color android:color="@color/splash_background"/>
+  </item>
+  <item android:right="60dp"
+        android:left="60dp"
+        android:bottom="0dp"
+        android:top="0dp">
+    <bitmap android:src="@mipmap/ic_logo"
+            android:gravity="center" />
+  </item>
+  <item android:bottom="80dp">
+    <bitmap android:src="@mipmap/ic_splash_legal"
+            android:gravity="bottom" />
+  </item>
+</layer-list>
