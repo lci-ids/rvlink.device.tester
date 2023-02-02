@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    x:Class="RvLinkDeviceTester.Resources.CommonColors">
+
+    <!--  Color modifiers  -->
+    <Color x:Key="TransparentBlack">#33000000</Color>
+    <Color x:Key="LightShadow">#10000000</Color>
+    <!--  End Color modifiers  -->
+
+    <!--  Colors  -->
+    <Color x:Key="DullRedTransparent">#F0b53a3a</Color>
+    <Color x:Key="PrimaryDark">Black</Color>
+    <Color x:Key="TransparentWhite">#80FFFFFF</Color>
+    <Color x:Key="SemitransparentWhite">#48FEFEFE</Color>
+    <Color x:Key="MostlytransparentWhite">#24FEFEFE</Color>
+    <Color x:Key="TextGray">#888888</Color>
+    <Color x:Key="BackgroundImageTint">#27000000</Color>
+    <!--  end not in zepplin style guide  -->
+
+    <Color x:Key="BubbleYellow">#FADE8F</Color>
+    <Color x:Key="BubbleGrey">#D5B85B</Color>
+
+    <!--  begin OneControl V3 Colors  -->
+    <Color x:Key="AquaMarine">#55CFB2</Color>
+    <Color x:Key="DullRed">#B63838</Color>
+    <Color x:Key="Black">#021019</Color>
+    <Color x:Key="TwilightBlue">#0A4A74</Color>
+    <Color x:Key="Blue">#478CBA</Color>
+    <Color x:Key="MediumBlue">#094166</Color>
+    <Color x:Key="OffWhite">#EDEAEA</Color>
+    <Color x:Key="RaincoatYellow">#FFD968</Color>
+    <Color x:Key="PastelOrange">#FFAA30</Color>
+    <Color x:Key="LightBlue">#7CC6F7</Color>
+    <Color x:Key="Midnight">#FF021019</Color>
+
+    <!--  accents, secondary/alt button highlight  -->
+    <Color x:Key="ButtonColor">#FFAA30</Color>
+    <Color x:Key="ButtonHighlight">#FA9600</Color>
+    <Color x:Key="RVHealthButtonColor">#478CBA</Color>
+    <Color x:Key="StepperButtonColor">#FFFFFFFF</Color>
+    <Color x:Key="StepperBorderColor">#80FFFFFF</Color>
+    <Color x:Key="StepperHighlightColor">#807CC6F7</Color>
+    
+    <!-- Manual Leveler Buttons -->
+    <Color x:Key="LevelerManualButtonColor">#FFFFFFFF</Color>
+    <Color x:Key="LevelerManualBorderColor">#8e8e8e</Color>
+    <Color x:Key="LevelerManualHighlightColor">#807CC6F7</Color>
+    <Color x:Key="LevelerManualShadowColor">#8e8e8e</Color>
+
+    <Color x:Key="AlertColor">#FFD968</Color>
+    <!--  RaincoatYellow  -->
+    <Color x:Key="WarningColor">#FB9650</Color>
+    <!--  PastelOrange  -->
+    <Color x:Key="ErrorColor">#B53A3A</Color>
+    
+    <!-- Color added to make old v4 shortcuts look better in white mode -->
+    <!-- We will not be maintaining these old shortcuts or this color in Denali -->
+    <Color x:Key="GradientStart">#4D575E</Color>
+
+    <!--  DullRed  -->
+</ResourceDictionary>

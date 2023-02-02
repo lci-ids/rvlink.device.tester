@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:RvLinkDeviceTester.UserInterface.Main;assembly=RvLinkDeviceTester"
+             xmlns:resources="clr-namespace:RvLinkDeviceTester.Resources"
+             xmlns:converters="clr-namespace:Xamarin.CommunityToolkit.Converters;assembly=Xamarin.CommunityToolkit"
+             xmlns:userInterface="clr-namespace:RvLinkDeviceTester.UserInterface"
+             x:Class="RvLinkDeviceTester.UserInterface.Main.MainPage"
+             x:DataType="viewModel:MainPageViewModel"
+             ControlTemplate="{StaticResource MainPageControlTemplate}">
+    <ContentPage.Resources>
+        <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        <userInterface:MainPageDataTemplateSelector x:Key="MainPageDataTemplateSelector" />
+    </ContentPage.Resources>
+    <Grid>
+        <StackLayout>
+            <Label VerticalOptions="Center"
+               HorizontalOptions="Center"
+               HorizontalTextAlignment="Center"
+               Margin="30,30,30,30"
+               IsVisible="{Binding ShowNoDevicesView}"
+               FontFamily="{DynamicResource MediumFont}"
+               FontSize="24"
+               Text="{x:Static resources:Strings.main_page_empty_label}"
+               TextColor="{DynamicResource TextColor}" />
+
+            <Label VerticalOptions="Center"
+               HorizontalOptions="Center"
+               HorizontalTextAlignment="Center"
+               Margin="30,30,30,0"
+               IsVisible="{Binding ShowNotConnectedMessage}"
+               FontFamily="{DynamicResource MediumFont}"
+               FontSize="24"
+               Text="Not currently connected to RvLink, re-pair the device for updated data"
+               TextColor="{DynamicResource ErrorColor}" />
+
+            <Button
+                    Text="Diagnostics"
+                    FontSize="20"
+                    Margin="20,20,20,0"
+                    Command="{Binding GoToDiagnosticsPage}"
+                    TextColor="{DynamicResource BackgroundColor}"
+                    BackgroundColor="{DynamicResource TextColor}"
+                    IsVisible="{Binding ShowNoDevicesView, Converter={StaticResource InvertedBoolConverter}}"
+                    WidthRequest="200"
+                    HeightRequest="50"
+                    CornerRadius="25"
+                    />
+
+            <CollectionView x:Name="DevicesGroupedCollectionView"
+                            VerticalOptions="FillAndExpand"
+                            BackgroundColor="Transparent"
+                            IsVisible="{Binding ShowNoDevicesView, Converter={StaticResource InvertedBoolConverter}}"
+                            IsGrouped="False"
+                            ItemsSource="{Binding Devices}"
+                            ItemTemplate="{StaticResource MainPageDataTemplateSelector}"
+                            >
+                <CollectionView.Header>
+                    <StackLayout Padding="10">
+                    </StackLayout>
+                </CollectionView.Header>
+            </CollectionView>
+        </StackLayout>
+    </Grid>
+</ContentPage>

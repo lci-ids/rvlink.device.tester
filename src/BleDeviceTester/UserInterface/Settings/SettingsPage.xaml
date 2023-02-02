@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:viewModel="clr-namespace:RvLinkDeviceTester.UserInterface.Settings"
+             xmlns:userInterface="clr-namespace:RvLinkDeviceTester.UserInterface"
+             x:DataType="viewModel:SettingsPageViewModel"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="RvLinkDeviceTester.UserInterface.Settings.SettingsPage"
+             xmlns:resources="clr-namespace:RvLinkDeviceTester.Resources;assembly=RvLinkDeviceTester">
+    <ContentPage.Resources>
+        <userInterface:MainPageDataTemplateSelector x:Key="MainPageDataTemplateSelector" />
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout>
+            
+            <!-- Use Key/Seed Exchange checkbox-->
+            <StackLayout Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding UseKeySeedChecked, Mode=TwoWay}"
+                   VerticalOptions="Center" 
+                   HorizontalOptions="Center" />
+                <Label Text="{x:Static resources:Strings.use_key_seed_title}"
+                   VerticalOptions="Center" 
+                   HorizontalOptions="Center" />
+            </StackLayout>
+            
+            <!-- Generate Notification on Alert Change checkbox -->
+            <StackLayout Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding GenerateNotificationsChecked, Mode=TwoWay}"
+                   VerticalOptions="Center" 
+                   HorizontalOptions="Center" />
+                <Label Text="{x:Static resources:Strings.generate_notifications_on_alert_change_setting}"
+                   VerticalOptions="Center" 
+                   HorizontalOptions="Center" />
+            </StackLayout>
+            
+            <CollectionView
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                IsGrouped="False"                
+                ItemTemplate="{StaticResource MainPageDataTemplateSelector}"
+                ItemsSource="{Binding SettingCellViewModels}">
+                <CollectionView.Header>
+                <StackLayout Padding="5">
+                </StackLayout>
+            </CollectionView.Header>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

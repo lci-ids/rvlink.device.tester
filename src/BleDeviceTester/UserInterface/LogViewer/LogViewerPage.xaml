@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=netstandard"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:viewModel="clr-namespace:RvLinkDeviceTester.UserInterface.LogViewer"
+             xmlns:models="clr-namespace:RvLinkDeviceTester"
+             xmlns:sfGrid="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms" 
+             xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:fontAwesome="clr-namespace:RvLinkDeviceTester.Resources.FontAwesome"
+             xmlns:converters="clr-namespace:RvLinkDeviceTester.UserInterface.Common.ValueConverters"
+             xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+             x:DataType="viewModel:LogViewerPageViewModel"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="RvLinkDeviceTester.UserInterface.LogViewer.LogViewerPage"
+             >
+    <ContentPage.Resources>
+        <Color x:Key="ControlWrapperBackgroundColor">#ebecef</Color>
+        <Color x:Key="FormContainerBackgroundColor">#ffffff</Color>
+        <Color x:Key="FormLabelBackgroundColor">#f6f7f8</Color>
+        <Color x:Key="FormSwitchOffColor">#ced2d9</Color>
+
+        <Style TargetType="Entry">
+            <Setter Property="FontFamily" Value="{StaticResource Rubik-Regular}" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="VerticalOptions" Value="Start" />
+            <Setter Property="TextColor" Value="{DynamicResource TextColor}" />
+            <Setter Property="BackgroundColor" Value="White" />
+            <Setter Property="HeightRequest" Value="40" />
+            <Setter Property="ClearButtonVisibility" Value="WhileEditing" />
+        </Style>
+
+        <converters:LogEntrySeverityToColorConverter x:Key="SeverityToColorConverter" />
+
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto, *" RowSpacing="0">
+            <Grid BackgroundColor="{StaticResource ControlWrapperBackgroundColor}" RowSpacing="1" ColumnSpacing="1" RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="Auto, *" VerticalOptions="Start">
+                <Grid.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="FontFamily" Value="{StaticResource Rubik-Bold}" />
+                        <Setter Property="BackgroundColor" Value="{StaticResource FormLabelBackgroundColor}" />
+                        <Setter Property="HeightRequest" Value="40" />
+                        <Setter Property="VerticalOptions" Value="Start" />
+                        <Setter Property="VerticalTextAlignment" Value="Center" />
+                        <Setter Property="Padding" Value="15,0" />
+                    </Style>
+
+                    <Style TargetType="combobox:SfComboBox">
+                        <Setter Property="BackgroundColor" Value="White" />
+                        <Setter Property="FontFamily" Value="{StaticResource Rubik-Regular}" />
+                        <Setter Property="TextSize" Value="14" />
+                        <Setter Property="TextColor" Value="{DynamicResource TextColor}" />
+                        <Setter Property="ShowBorder" Value="False" />
+                        <Setter Property="WatermarkColor" Value="#606a7b" />
+                        <Setter Property="ItemPadding" Value="8,0,0,0" />
+                        <Setter Property="HeightRequest" Value="40" />
+                        <Setter Property="VerticalOptions" Value="Center" />
+                        <Setter Property="DropDownBorderColor" Value="#ced2d9" />
+                        <Setter Property="SelectedDropDownItemColor" Value="Transparent" />
+                        <Setter Property="DropDownBackgroundColor" Value="White" />
+                        <Setter Property="DropDownTextColor" Value="#606a7b" />
+                    </Style>
+
+                    <Style TargetType="buttons:SfSwitch" ApplyToDerivedTypes="True">
+                        <Setter Property="Margin" Value="4,0" />
+                        <Setter Property="AllowIndeterminateState" Value="False" />
+                        <Setter Property="HeightRequest" Value="30" />
+                        <Setter Property="HorizontalOptions" Value="Start" />
+                        <Setter Property="VisualType" Value="Cupertino" />
+                    </Style>
+
+                </Grid.Resources>
+
+                <Label Text="Severity" />
+                <combobox:SfComboBox Grid.Column="1" DisplayMemberPath="Severity" DataSource="{Binding SeverityLevels}" SelectedItem="{Binding SelectedSeverity, Mode=TwoWay}">
+                    <combobox:SfComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="models:SeverityLevel">
+                            <Grid ColumnDefinitions="8, *" Padding="2, 1, 0, 1" BackgroundColor="White">
+                                <Rectangle BackgroundColor="{Binding Severity, Converter={StaticResource SeverityToColorConverter}}" Stroke="LightGray" StrokeThickness="1" WidthRequest="8" />
+                                <Label Text="{Binding Severity}" BackgroundColor="White" Grid.Column="1" LineBreakMode="NoWrap" VerticalOptions="Fill" VerticalTextAlignment="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </combobox:SfComboBox.ItemTemplate>
+                </combobox:SfComboBox>
+
+                <Label Text="Text Filter" Grid.Row="1" />
+                <Grid Grid.Row="1" Grid.Column="1" BackgroundColor="{StaticResource FormContainerBackgroundColor}">
+                    <Entry IsSpellCheckEnabled="False" IsTextPredictionEnabled="False" Text="{Binding FilterText, Mode=TwoWay}" />
+                </Grid>
+
+                <Label Text="Real-Time Logging" Grid.Row="2" />
+                <Grid Grid.Row="2" Grid.Column="1" BackgroundColor="{StaticResource FormContainerBackgroundColor}">
+                    <buttons:SfSwitch IsOn="{Binding RealTimeLoggingEnabled, Mode=TwoWay}" VisualType="Cupertino">
+                        <!--NOTE: VISUAL STATE GROUPS CANNOT BE SET THROUGH STYLES-->
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="On">
+                                        <VisualState.Setters>
+                                            <Setter Property="SwitchSettings">
+                                                <Setter.Value>
+                                                    <buttons:CupertinoSwitchSettings
+                                                    x:TypeArguments="buttons:OnState"
+                                                    ThumbBorderColor="White"
+                                                    ThumbColor="White"
+                                                    TrackBorderColor="{DynamicResource TertiaryColor}"
+                                                    TrackColor="{DynamicResource TertiaryColor}" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Off">
+                                        <VisualState.Setters>
+                                            <Setter Property="SwitchSettings">
+                                                <Setter.Value>
+                                                    <buttons:CupertinoSwitchSettings
+                                                    x:TypeArguments="buttons:OffState"
+                                                    ThumbBorderColor="{StaticResource FormSwitchOffColor}"
+                                                    ThumbColor="White"
+                                                    TrackBorderColor="{StaticResource FormSwitchOffColor}"
+                                                    TrackColor="{StaticResource FormSwitchOffColor}" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                    </buttons:SfSwitch>
+                </Grid>
+            </Grid>
+
+            <sfGrid:SfDataGrid Grid.Row="1"
+                               Margin="-6,0,0,0"
+                               IsVisible="True"
+                               ItemsSource="{Binding LogEntries}" 
+                               AutoGenerateColumns="False" 
+                               AllowSorting="False"
+                               ShowColumnWhenGrouped="False"
+                               AllowTriStateSorting="True"
+                               HorizontalScrollBarVisibility="True"
+                               CanMaintainScrollPosition="True"
+                               ColumnSizer="Auto"
+                               SelectionMode="SingleDeselect"
+                               AllowDiagonalScrolling="False"
+                               NotificationSubscriptionMode="CollectionChange"
+                               RowHeight="60">
+                <sfGrid:SfDataGrid.Resources>
+
+                </sfGrid:SfDataGrid.Resources>
+                <sfGrid:SfDataGrid.GridStyle>
+                    <sfGrid:DefaultStyle GridLinesVisibility="Both" 
+                                         HeaderCellBorderColor="DimGray"
+                                         HeaderCellBorderWidth="2"
+                                         SelectionBackgroundColor="{StaticResource ControlWrapperBackgroundColor}"
+                                         SelectionForegroundColor="{DynamicResource TextColor}"/>
+                </sfGrid:SfDataGrid.GridStyle>
+
+                <!--COLUMN DEFINITION-->
+                <sfGrid:SfDataGrid.Columns>
+                    <sfGrid:GridTemplateColumn HeaderText=""
+                                               MappingName="Severity"
+                                               Width="1"
+                                               Padding="0"
+                                               ColumnSizer="Auto">
+                        <sfGrid:GridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Rectangle WidthRequest="1" StrokeThickness="0" Stroke="WhiteSmoke" Margin="6,1,1,1" BackgroundColor="{Binding Severity, Converter={StaticResource SeverityToColorConverter}}" />
+                            </DataTemplate>
+                        </sfGrid:GridTemplateColumn.CellTemplate>
+                    </sfGrid:GridTemplateColumn>
+                    <sfGrid:GridDateTimeColumn HeaderText="TIME" MappingName="LoggedOn" Format="HH:mm:ss fff" Width="80" LineBreakMode="WordWrap" HeaderFont="{StaticResource Rubik-Bold}" />
+                    <sfGrid:GridTextColumn HeaderText="DEVICE" MappingName="DeviceName" HeaderFont="{StaticResource Rubik-Bold}" Width="80" Padding="5,2" />
+                    <sfGrid:GridTextColumn HeaderText="MESSAGE" MappingName="Message" ColumnSizer="Star" Width="400" Padding="5,2" HeaderTextAlignment="Start" TextAlignment="Start" HeaderFont="{StaticResource Rubik-Bold}" />
+                </sfGrid:SfDataGrid.Columns>
+            </sfGrid:SfDataGrid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

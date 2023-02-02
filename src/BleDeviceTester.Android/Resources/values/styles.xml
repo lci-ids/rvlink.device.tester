@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+
+	<!-- Copied from OneControl/Resources -->
+	<color name="PageBackgroundColor">#000000</color>
+	<color name="ColorOnBackground">#000000</color>
+	<color name="TextColor">#000000</color>
+
+	<color name="DarkPageBackgroundColor">#FFFFFF</color>
+	<color name="PrimaryColor">#000000</color>
+	<color name="ColorOnPrimary">#FFFFFF</color>
+	<color name="TextColorOnPrimary">#FFFFFF</color>
+	<color name="PrimaryDark">#000000</color>
+	<color name="SecondaryColor">#FFC000</color>
+	<color name="AccentColor">#8BD92A</color>
+	<color name="SecondaryTextColor">#7A7A7A</color>
+	<color name="ActionColor">#7B3DFF</color>
+	<color name="MinimumContrastGray">#767676</color>
+
+	<!-- base styles -->
+	<style name="MainTheme" parent="MainTheme.Base">
+		<item name="android:windowBackground">@color/PageBackgroundColor</item>
+	</style>
+
+	<style name="MainTheme.Base" parent="Theme.MaterialComponents.NoActionBar.Bridge">
+		<item name="android:colorAccent">@color/AccentColor</item>
+		<item name="android:textColor">@color/TextColor</item>
+		<item name="colorPrimaryDark">@color/PrimaryDark</item>
+		<item name="android:buttonBarButtonStyle">@style/DialogButton</item>
+		<item name="android:actionMenuTextColor">@color/toolbar_text_color</item>
+		<item name="android:alertDialogTheme">@style/AlertDialogStyle</item>
+		<item name="android:dialogTheme">@style/DialogStyle</item>
+	</style>
+
+	<!--<style name="MainTheme.Splash" parent="MainTheme.Base">
+		<item name="android:windowBackground">@drawable/splash_layer</item>
+	</style>-->
+
+	<style name="MainTheme.Splash" parent ="MainTheme.Base">
+		<item name="android:windowBackground">@drawable/splash_screen</item>
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowFullscreen">true</item>
+		<item name="android:windowContentOverlay">@null</item>
+		<item name="android:windowActionBar">true</item>
+	</style>
+
+	<!-- Alert -->
+	<style name="AlertDialogStyle" parent="Theme.MaterialComponents.Light.Dialog.Bridge">
+		<item name="colorAccent">@color/TextColor</item>
+		<item name="colorPrimary">@color/PrimaryColor</item>
+		<item name="android:textColor">@color/TextColor</item>
+		<item name="android:buttonStyle">@style/DialogButton</item>
+	</style>
+
+	<!-- All Dialogs -->
+	<style name="DialogStyle" parent="Theme.MaterialComponents.Light.Dialog.Bridge">
+		<item name="colorAccent">@color/TextColor</item>
+		<item name="colorPrimary">@color/PrimaryColor</item>
+		<item name="android:textColor">@color/TextColor</item>
+		<item name="android:buttonStyle">@style/DialogButton</item>
+		<item name="android:editTextStyle">@style/DialogEditTextStyle</item>
+	</style>
+
+	<!-- dialogs / buttons -->
+	<style name="AppCompatDialogStyle" parent="Theme.MaterialComponents.Light.Dialog.Bridge">
+		<item name="colorPrimary">@color/ActionColor</item>
+		<item name="android:textColor">@color/TextColor</item>
+		<item name="android:textColorPrimary">@color/TextColor</item>
+		<item name="android:textColorSecondary">@color/TextColor</item>
+		<item name="android:textColorTertiary">@color/TextColor</item>
+		<item name="android:buttonBarButtonStyle">@style/DialogButton</item>
+		<item name="android:buttonStyle">@style/DialogButton</item>
+	</style>
+
+	<style name="DialogEditTextStyle" parent="Widget.AppCompat.EditText">
+		<item name="android:backgroundTint">@color/TextColor</item>
+		<item name="android:textSize">24sp</item>
+		<item name="android:gravity">center_horizontal</item>
+	</style>
+
+
+
+	<style name="DialogButton" parent="Widget.AppCompat.Button">
+		<!-- Refer to the colorPrimary attribute for the currently applied theme. -->
+		<item name="android:textColor">?attr/colorPrimary</item>
+	</style>
+
+	<!-- Workaround for bug in xamarin.google.android.material nuget -->
+	<style name="Widget.Design.Snackbar" parent="android:Widget">
+		<item name="animationMode">@anim/abc_slide_out_bottom</item>
+	</style>
+
+</resources>

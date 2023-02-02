@@ -1,0 +1,85 @@
+﻿{
+  "project_info": {
+    "project_number": "528960173987",
+    "firebase_url": "https://onecontrol-70c06.firebaseio.com",
+    "project_id": "onecontrol-70c06",
+    "storage_bucket": "onecontrol-70c06.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528960173987:android:66e05dde4e34073b",
+        "android_client_info": {
+          "package_name": "com.lci1.RvLinkDeviceTester"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "528960173987-ghgh0n81kjkb36ld8krl0n19e5p5uv4h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg6RyWzf-MJ4JjLGKYDj_Ec25o0YmwFT0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "528960173987-ghgh0n81kjkb36ld8krl0n19e5p5uv4h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "528960173987-567ekrn0ug0vg5cr9oggb7mplf3fgtbj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lci1.RvLinkDeviceTester",
+                "app_store_id": "1039394586"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528960173987:android:d404a643bc053c3d",
+        "android_client_info": {
+          "package_name": "com.lci1.RvLinkDeviceTester.v3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "528960173987-ghgh0n81kjkb36ld8krl0n19e5p5uv4h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg6RyWzf-MJ4JjLGKYDj_Ec25o0YmwFT0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "528960173987-ghgh0n81kjkb36ld8krl0n19e5p5uv4h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "528960173987-567ekrn0ug0vg5cr9oggb7mplf3fgtbj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lci1.RvLinkDeviceTester",
+                "app_store_id": "1039394586"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

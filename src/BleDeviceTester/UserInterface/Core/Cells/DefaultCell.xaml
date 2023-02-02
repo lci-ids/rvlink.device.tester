@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:interfaces="clr-namespace:IDS.UI.Interfaces;assembly=ids.ui"
+             xmlns:fontAwesome="clr-namespace:RvLinkDeviceTester.Resources.FontAwesome"
+             x:DataType="interfaces:ICellViewModel"
+             x:Class="RvLinkDeviceTester.UserInterface.DefaultCell">
+    <ContentView.Content>
+        <Grid RowSpacing="0"
+              ColumnSpacing="0"
+              ColumnDefinitions="*, Auto"
+              RowDefinitions="Auto, Auto"
+              Margin="20,12"
+              VerticalOptions="Start">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding CellCommand}" />
+            </Grid.GestureRecognizers>
+            
+            <Label Text="{Binding Text}" IsEnabled="{Binding IsEnabled}" VerticalTextAlignment="Center" FontFamily="{StaticResource Rubik-Bold}" FontSize="16" />
+            <Label Text="{Binding Description, Mode=TwoWay}" Grid.Row="1" IsEnabled="{Binding IsEnabled}" VerticalTextAlignment="Center" FontSize="13" />
+
+            <Label Grid.Column="1" 
+                   Grid.RowSpan="2"
+                   IsEnabled="{Binding IsEnabled}"
+                   FontFamily="{StaticResource FontAwesomeSolid}"
+                   FontSize="32"
+                   VerticalOptions="Center"
+                   BackgroundColor="Transparent"
+                   TextColor="{DynamicResource TextColor}"
+                   Text="{x:Static fontAwesome:Icon.FAChevronRight}" />
+        </Grid>
+    </ContentView.Content>
+</ContentView>

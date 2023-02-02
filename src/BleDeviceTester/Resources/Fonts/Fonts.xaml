@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    x:Class="RvLinkDeviceTester.Resources.Fonts.Fonts">
+
+    <x:String x:Key="Rubik-Black">Rubik-Black</x:String>
+    <x:String x:Key="Rubik-BlackItalic">Rubik-BlackItalic</x:String>
+    <x:String x:Key="Rubik-Bold">Rubik-Bold</x:String>
+    <x:String x:Key="Rubik-BoldItalic">Rubik-BoldItalic</x:String>
+    <x:String x:Key="Rubik-Italic">Rubik-Italic</x:String>
+    <x:String x:Key="Rubik-Light">Rubik-Light</x:String>
+    <x:String x:Key="Rubik-LightItalic">Rubik-LightItalic</x:String>
+    <x:String x:Key="Rubik-Medium">Rubik-Medium</x:String>
+    <x:String x:Key="Rubik-MediumItalic">Rubik-MediumItalic</x:String>
+    <x:String x:Key="Rubik-Regular">Rubik-Regular</x:String>
+
+    <x:String x:Key="ShareTechMono-Regular">ShareTechMono-Regular</x:String>
+
+    <x:String x:Key="Yantramanav-Bold">Yantramanav-Bold</x:String>
+    <x:String x:Key="Yantramanav-Light">Yantramanav-Light</x:String>
+    <x:String x:Key="Yantramanav-Medium">Yantramanav-Medium</x:String>
+    <x:String x:Key="Yantramanav-Regular">Yantramanav-Regular</x:String>
+    <x:String x:Key="Yantramanav-Thin">Yantramanav-Thin</x:String>
+
+    <x:String x:Key="ocm">ocm</x:String>
+</ResourceDictionary>
