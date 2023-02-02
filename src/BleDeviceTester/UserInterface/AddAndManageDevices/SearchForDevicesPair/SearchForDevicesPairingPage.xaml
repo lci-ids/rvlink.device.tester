@@ -2,20 +2,20 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
-             xmlns:viewModel="clr-namespace:RvLinkDeviceTester.UserInterface.AddAndManageDevices.MacAddressPair"
+             xmlns:vm="clr-namespace:RvLinkDeviceTester.UserInterface.AddAndManageDevices.SearchForDevicesPair"
+             xmlns:viewModel2="clr-namespace:RvLinkDeviceTester.UserInterface.AddAndManageDevices"
              xmlns:fontawesome="clr-namespace:RvLinkDeviceTester.Resources.FontAwesome;assembly=RvLinkDeviceTester"
-             xmlns:autocomplete="clr-namespace:Syncfusion.SfAutoComplete.XForms;assembly=Syncfusion.SfAutoComplete.XForms"
-             xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
-             x:DataType="viewModel:MacAddressPairingPageViewModel"
+             xmlns:converters2="clr-namespace:RvLinkDeviceTester.UserInterface.Converters"
+             x:DataType="vm:SearchForDevicesPairingPageViewModel"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="RvLinkDeviceTester.UserInterface.AddAndManageDevices.MacAddressPair.MacAddressPairingPage"
+             x:Class="RvLinkDeviceTester.UserInterface.AddAndManageDevices.SearchForDevicesPair.SearchForDevicesPairingPage"
              >
     <ContentPage.Content>
         <StackLayout>
-            <!-- State: Enter Mac Address -->
+            <!-- State: Device Selection -->
             <Label 
                 Text="{x:Static fontawesome:Icon.FABluetooth}"
-                IsVisible="{Binding ShowWaitingForMacAddress}"
+                IsVisible="{Binding ShowWaitingForDeviceSelection}"
                 FontFamily="{StaticResource FontAwesomeBrands}"
                 HorizontalTextAlignment="Center"
                 Margin="20,80,20,20"
@@ -23,8 +23,8 @@
                 FontSize="120" />
 
             <Label 
-                Text="{Binding Title}"
-                IsVisible="{Binding ShowWaitingForMacAddress}"
+                Text="Select a RvLink Device"
+                IsVisible="{Binding ShowWaitingForDeviceSelection}"
                 FontAttributes="Bold"
                 FontSize="24"
                 TextColor="{DynamicResource TextColor}"
@@ -32,48 +32,86 @@
                 HorizontalTextAlignment="Center"
                 Margin="20,40,20,20"
                 />
-            
+
             <Label 
-                Text="Enter the Mac Address of the Bluetooth® device you wish to pair. Then press pair." 
-                IsVisible="{Binding ShowWaitingForMacAddress}"
-                
-                FontSize="16"
+                Text="Searching for devices..." 
+                IsVisible="{Binding ShowSearching}"
+                FontSize="20"
                 TextColor="{DynamicResource TextColor}"
                 VerticalTextAlignment="Start"
                 HorizontalTextAlignment="Center"
                 Margin="20"
                 />
 
-            <inputLayout:SfTextInputLayout
-                Hint="Enter Mac Address"
-                FocusedColor="{DynamicResource TextColorVariant}"
-                UnfocusedColor="{DynamicResource TextColorVariant}"
-                ContainerType="Outlined"
-                OutlineCornerRadius="5"
-                Margin="20"
-                IsVisible="{Binding ShowWaitingForMacAddress}">
-                <autocomplete:SfAutoComplete
-                    ShowSuggestionsOnFocus="true"
-                    AutoCompleteMode="Suggest"
-                    SuggestionMode="Contains"
-                    DataSource="{Binding MacHistory}"
-                    Text="{Binding MacAddressEntered}" />
-            </inputLayout:SfTextInputLayout>
+            <CollectionView Grid.Row="1"
+                      IsVisible="{Binding ShowWaitingForDeviceSelection}"
+                      AutomationId="WifiList"
+                      SelectionMode="Single"
+                      ItemSizingStrategy="MeasureFirstItem"
+                      SelectionChangedCommand="{Binding SelectedCommand}"
+                      BackgroundColor="Transparent"
+                      ItemsSource="{Binding ScanResults}"
+                      SelectedItem="{Binding ScanResult}">
+                <CollectionView.Resources>
+                    <ResourceDictionary>
+                        <converters2:StringNotEmptyConverter x:Key="StringNotEmptyConverter" />
+                    </ResourceDictionary>
+                </CollectionView.Resources>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type viewModel2:ScanResultViewModel}">
+                        <Grid ColumnSpacing="0"
+                                  RowSpacing="0"
+                                  Padding="8"
+                                  Margin="0, 0, 0, 3"
+                                  HorizontalOptions="FillAndExpand"
+                                  VerticalOptions="FillAndExpand">
 
-            <Button
-                Text="Pair"
-                IsVisible="{Binding ShowWaitingForMacAddress}"
-                
-                Command="{Binding Pair}"
-                TextColor="{DynamicResource BackgroundColor}"
-                BackgroundColor="{DynamicResource TextColor}"
-                VerticalOptions="EndAndExpand"
-                WidthRequest="200"
-                HeightRequest="50"
-                CornerRadius="25"
-                FontSize="20"
-                Margin="20"
-                />
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroupList>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="Selected">
+                                            <VisualState.Setters>
+                                                <Setter Property="BackgroundColor"
+                                                            Value="{DynamicResource SecondaryColor}" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateGroupList>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="48" />
+                            </Grid.RowDefinitions>
+
+                            <FlexLayout Grid.Column="1"
+                                            Direction="Row"
+                                            AlignContent="Center"
+                                            AlignItems="Start"
+                                            Wrap="Wrap"
+                                            HeightRequest="48"
+                                            VerticalOptions="CenterAndExpand">
+
+                                <Label FlexLayout.Basis="100%" HeightRequest="20"
+                                           FontAttributes="Bold"
+                                           TextColor="{DynamicResource TextColor}"
+                                           Text="{Binding Name}" />
+
+                                <Label FlexLayout.Basis="100%" 
+                                           HeightRequest="15"
+                                           IsVisible="{Binding Description, Converter={StaticResource StringNotEmptyConverter}}"
+                                           TextColor="{DynamicResource TextColor}"
+                                           Text="{Binding Description}" />
+                            </FlexLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
             <!-- State: Connecting -->
             <Label 

@@ -162,7 +162,7 @@ namespace RvLinkDeviceTester.UserInterface.Settings
             try
             {
                 var sensorBle = genericSensorBle?.GetGenericSensor(sensor);
-                Devices.GenericSensorPageViewModel.RemoveGenericAccessory(sensorBle, _logicalDeviceService, genericSensorBle);
+                Devices.GenericDevicePageViewModel.RemoveGenericAccessory(sensorBle, _logicalDeviceService, genericSensorBle);
                 return true;
             }
             catch (Exception ex)

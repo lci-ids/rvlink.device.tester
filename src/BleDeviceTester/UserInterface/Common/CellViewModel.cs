@@ -2,8 +2,10 @@
 
 using IDS.UI.Interfaces;
 using PrismExtensions.ViewModels;
+using RvLinkDeviceTester.ViewModels.Base.Navigation;
 using System;
 using System.Windows.Input;
+using static OneControl.UserInterface.Common.CellViewModel;
 
 namespace OneControl.UserInterface.Common
 {
@@ -55,6 +57,7 @@ namespace OneControl.UserInterface.Common
 
         public virtual string Category { get; } = string.Empty;
 
+        public CellViewModel(INavigationProxy navigationProxy) : base((Prism.Navigation.INavigationService)navigationProxy) { }
         public CellViewModel(string text) : this(text, null, "") { }
 
         public CellViewModel(string text, string description, string category = "") : base(null)
@@ -63,6 +66,7 @@ namespace OneControl.UserInterface.Common
             _description = description;
             Category = category;
         }
+
         //: this(null, text, description, category) { }
 
         //public CellViewModel(INavigationProxy navigationProxy) : this(navigationProxy, "", "") { }
@@ -91,6 +95,25 @@ namespace OneControl.UserInterface.Common
             return cp != 0
                 ? cp
                 : string.Compare(Description, other.Description, StringComparison.CurrentCulture);
+        }
+    }
+
+    public class CellViewModel<TCustomData> : CellViewModel
+    {
+        public TCustomData CustomData { get; }
+
+        public CellViewModel(TCustomData customData, INavigationProxy navigationProxy, string text, string description = "")
+            : base(navigationProxy)
+        {
+            CustomData = customData;
+            Text = text;
+            Description = description;
+        }
+
+        public CellViewModel(TCustomData customData, string text, string description = "")
+            : base(text, description)
+        {
+            CustomData = customData;
         }
     }
 }

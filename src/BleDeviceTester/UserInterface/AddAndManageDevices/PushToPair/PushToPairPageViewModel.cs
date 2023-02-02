@@ -16,6 +16,11 @@ using OneControl.Direct.IdsCanAccessoryBle.ScanResults;
 using Prism.Commands;
 using OneControl.Direct.IdsCanAccessoryBle.GenericSensor;
 using RvLinkDeviceTester.Connections.Sensors;
+using Fizzler;
+using OneControl.Direct.MyRvLinkBle;
+using RvLinkDeviceTester.Connections.Rv;
+using System.Diagnostics;
+using RvLinkDeviceTester.Services;
 
 namespace RvLinkDeviceTester.UserInterface.AddAndManageDevices.PushToPair
 {
@@ -30,9 +35,12 @@ namespace RvLinkDeviceTester.UserInterface.AddAndManageDevices.PushToPair
     public class PushToPairPageViewModel : BaseViewModel, IViewModelResumePause
     {
         private readonly string LogTag = nameof(PushToPairPageViewModel);
+        private readonly IAppSettings _appSettings;
 
         private static readonly TimeSpan WarningTimeSpan = TimeSpan.FromSeconds(2);
         private static readonly TimeSpan ScanDelayInterval = TimeSpan.FromSeconds(4);
+        private readonly int CheckForConnectionCompletedMs = 200;
+        private readonly TimeSpan MaxMyRvLinkConnectionWaitTime = TimeSpan.FromSeconds(25);
         private const int MaximumScanAttempts = 3;
         private const int MaximumWaitForPushToPairAttempts = 3;
         private const int ConnectionRetryMs = 4000;
@@ -94,8 +102,9 @@ namespace RvLinkDeviceTester.UserInterface.AddAndManageDevices.PushToPair
         public ICommand GoBack => _goBack ??= new AsyncCommand(async () => await NavigationService.GoBackAsync());
         #endregion
 
-        public PushToPairPageViewModel(INavigationService navigationService) : base(navigationService)
+        public PushToPairPageViewModel(INavigationService navigationService, IAppSettings appSettings) : base(navigationService)
         {
+            _appSettings = appSettings;
         }
 
 
@@ -115,8 +124,11 @@ namespace RvLinkDeviceTester.UserInterface.AddAndManageDevices.PushToPair
             // Do the connection stuff
             //
             State = PushToPairState.WaitingForDevice;
-           
-            var (newDevicesInPairingMode, existingDeviceInPairMode) = await GetSensorsInLinkModeAsync(ResumePauseCancellationToken);
+
+            //Add Brief delay before searching
+            await TaskExtension.TryDelay(ScanDelayInterval, ResumePauseCancellationToken);
+
+            var (newDevicesInPairingMode, existingDeviceInPairMode) = await GetDevicesInLinkModeAsync(ResumePauseCancellationToken);
 
             if (newDevicesInPairingMode.Count == 0)
             {
@@ -145,92 +157,81 @@ namespace RvLinkDeviceTester.UserInterface.AddAndManageDevices.PushToPair
                 return;
             }
 
-            await LinkToSensorAsync(newDevicesInPairingMode[0], ResumePauseCancellationToken);
+            // If the device has pairing enabled, then try to connect/
+            //
+            var bleScanResult = newDevicesInPairingMode[0];
+            var scannedDevice = await BleScannerService.Instance.TryGetDeviceAsync<IPairableDeviceScanResult>(bleScanResult.DeviceId, ResumePauseCancellationToken);
+            if (scannedDevice?.PairingEnabled ?? false)
+            {
+                if (await ConnectToDevice(bleScanResult))
+                {
+                    TaggedLog.Information(LogTag, "Successfully connected to RvLink device");
+                    State = PushToPairState.Connected;
+                }
+                else
+                {
+                    ErrorReason = "Push to Pair connection failed, device found, but failed to connect";
+                    TaggedLog.Error(LogTag, ErrorMessage);
+                    State = PushToPairState.Error;
+                }
+            }
+            else
+            {
+                ErrorReason = "Push to Pair connection failed, device was not in pairing mode";
+                TaggedLog.Error(LogTag, ErrorMessage);
+                State = PushToPairState.Error;
+                return;
+            }
         }
 
-        private async Task<bool> LinkToSensorAsync(IdsCanAccessoryScanResult accessoryScanResult, CancellationToken startStopCancellationToken)
+        private async Task<bool> ConnectToDevice(IBleScanResult bleScanResult)
         {
             State = PushToPairState.Connecting;
 
-            if (!accessoryScanResult.IsInLinkMode)
+            var connection = new RvGatewayMyRvLinkConnectionBle(bleScanResult.DeviceId, bleScanResult.DeviceName);
+            _appSettings.SetSelectedRvGatewayConnection(connection, false);
+            var waitForConnectionTimer2 = Stopwatch.StartNew();
+            var timeToWait2 = MaxMyRvLinkConnectionWaitTime.TotalMilliseconds;
+
+            while (waitForConnectionTimer2.ElapsedMilliseconds < timeToWait2 &&
+               AppDirectConnectionService.Instance.RvConnectionStatus !=
+               ConnectionManagerStatus.Connected &&
+               !ResumePauseCancellationToken.IsCancellationRequested)
             {
-                ErrorReason = "Push to Pair connection failed, failed to link to device, device has left link mode";
-                TaggedLog.Error(LogTag, ErrorMessage);
-                State = PushToPairState.Error;
-                return false;
+                await TaskExtension.TryDelay(CheckForConnectionCompletedMs, ResumePauseCancellationToken);
             }
 
-            var accessoryMacAddress = accessoryScanResult.AccessoryMacAddress;
-            if (accessoryMacAddress == null)
+            // Check the connection status now that we've completed or timed out.
+            if (AppDirectConnectionService.Instance.RvConnectionStatus != ConnectionManagerStatus.Connected)
             {
-                ErrorReason = "Push to Pair connection failed, failed to link to device, AccessoryMacAddress is null";
-                TaggedLog.Error(LogTag, ErrorMessage);
-                State = PushToPairState.Error;
+                connection = null;
+                _appSettings.SetSelectedRvGatewayConnection(AppSettings.DefaultRvDirectConnectionNone,
+                    false);
                 return false;
             }
-
-            var accessoryStatus = accessoryScanResult.GetAccessoryStatus(accessoryMacAddress);
-            if (accessoryStatus == null)
+            else
             {
-                ErrorReason = "Push to Pair connection failed, failed to link to device, accessories status is null";
-                TaggedLog.Error(LogTag, ErrorMessage);
-                State = PushToPairState.Error;
-                return false;
+                return true;
             }
-
-            //REGISTER GENERIC DEVICE
-            var genericSensorBle = Resolver<IDirectGenericSensorBle>.Resolve;
-            if (genericSensorBle is null)
-            {
-                ErrorReason = "Push to Pair connection failed, unable to resolve IDirectGenericSensorBle";
-                TaggedLog.Error(LogTag, ErrorMessage);
-                State = PushToPairState.Error;
-                return false;
-            }
-
-            genericSensorBle.RegisterGenericSensor(accessoryScanResult.DeviceId, accessoryMacAddress, accessoryScanResult.SoftwarePartNumber ?? string.Empty, accessoryScanResult.DeviceName);
-            AppSettings.Instance.TakeSnapshot();
-
-            AppSettings.Instance.TryAddSensorConnection(new SensorConnectionGeneric(accessoryScanResult.DeviceName, accessoryScanResult.DeviceId,
-                     accessoryMacAddress, accessoryScanResult.SoftwarePartNumber));
-
-            //Verify that the accessory is now linked
-            var linkVerify = await accessoryScanResult.TryLinkVerificationAsync(requireLinkMode: true, cancellationToken: CancellationToken.None);
-            TaggedLog.Debug(LogTag, $"{accessoryScanResult} Link Verify {linkVerify}");
-
-            if (linkVerify != BleDeviceKeySeedExchangeResult.Succeeded)
-            {
-                ErrorReason = "Push to Pair connection failed, key/seed exchange failed";
-                TaggedLog.Error(LogTag, ErrorMessage);
-                State = PushToPairState.Error;
-                return false;
-            }
-
-            State = PushToPairState.Connected;
-            return true;
         }
 
-        private static async Task<(IList<IdsCanAccessoryScanResult> newDevicesInPairMode, IdsCanAccessoryScanResult? existingDeviceInPairMode)> GetSensorsInLinkModeAsync(CancellationToken cancellationToken)
+        private static async Task<(IList<IBleScanResult> newDevicesInPairMode, IBleScanResult? existingDeviceInPairMode)> GetDevicesInLinkModeAsync(CancellationToken cancellationToken)
         {
-            var devices = new Dictionary<Guid, IdsCanAccessoryScanResult>();
+            var devices = new Dictionary<Guid, IBleScanResult>();
 
-            IdsCanAccessoryScanResult? foundExistingDeviceInPairMode = null;
+            IBleScanResult? foundExistingDeviceInPairMode = null;
 
             for (var scanAttempt = 0; scanAttempt < MaximumScanAttempts && !cancellationToken.IsCancellationRequested; scanAttempt++)
             {
                 devices.Clear();
-                await BleScannerService.Instance.TryGetDevicesAsync<IdsCanAccessoryScanResult>(
+                await BleScannerService.Instance.TryGetDevicesAsync<IBleScanResult>(
                     (operation, scanResult) => devices[scanResult.DeviceId] = scanResult,
                     scanResult =>
                     {
                         if (scanResult == null)
                             return BleScannerCommandControl.Skip;
 
-                        if (!scanResult.IsInLinkMode)
-                            return BleScannerCommandControl.Skip;
-
-                        var accessoryMacAddress = scanResult.AccessoryMacAddress;
-                        if (accessoryMacAddress == null)
+                        if (scanResult is not IMyRvLinkBleGatewayScanResult)
                             return BleScannerCommandControl.Skip;
 
                         // We have a new sensor so go ahead and include it!

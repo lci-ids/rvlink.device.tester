@@ -5,10 +5,10 @@ using Xamarin.Forms;
 
 namespace RvLinkDeviceTester.UserInterface.Devices
 {
-    [RegisterPageForNavigation(typeof(GenericSensorPageViewModel))]
-    public partial class GenericSensorPage : ContentPage
+    [RegisterPageForNavigation(typeof(GenericDevicePageViewModel))]
+    public partial class GenericDevicePage : ContentPage
     {
-        public GenericSensorPage()
+        public GenericDevicePage()
         {
             InitializeComponent();
         }

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:viewModel="clr-namespace:RvLinkDeviceTester.UserInterface.Diagnostics" 
+             xmlns:userInterface="clr-namespace:RvLinkDeviceTester.UserInterface" 
+             xmlns:converters="http://xamarin.com/schemas/2020/toolkit"
+             x:DataType="viewModel:MyRvLinkDiagnosticsPageViewModel"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="RvLinkDeviceTester.UserInterface.Diagnostics.MyRvLinkDiagnosticsPage">
+    <ContentPage.Resources>
+        <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        <userInterface:MainPageDataTemplateSelector x:Key="MainPageDataTemplateSelector" />
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout>
+
+            <Label VerticalOptions="Center"
+               HorizontalOptions="Center"
+               HorizontalTextAlignment="Center"
+               Margin="30,30,30,0"
+               FontFamily="{DynamicResource MediumFont}"
+               FontSize="24"
+               Text="EVENTS"
+               TextColor="{DynamicResource TextColor}" />
+
+            <CollectionView x:Name="DevicesGroupedCollectionView"
+                            VerticalOptions="FillAndExpand"
+                            BackgroundColor="Transparent"
+                            IsGrouped="False"
+                            ItemsSource="{Binding Events}"
+                            ItemTemplate="{StaticResource MainPageDataTemplateSelector}"
+                            >
+                <CollectionView.Header>
+                    <StackLayout Padding="10">
+                    </StackLayout>
+                </CollectionView.Header>
+            </CollectionView>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

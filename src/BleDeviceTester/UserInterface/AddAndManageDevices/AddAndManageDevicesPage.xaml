@@ -25,10 +25,10 @@
                 CornerRadius="25"
                 />
             <Button
-                Text="Mac Address Entry"
+                Text="Search for Devices"
                 FontSize="20"
                 Margin="20,0,20,20"
-                Command="{Binding GoToMacConnection}"
+                Command="{Binding GoToSearchForDevicesConnection}"
                 TextColor="{DynamicResource BackgroundColor}"
                 BackgroundColor="{DynamicResource TextColor}"
                 WidthRequest="200"

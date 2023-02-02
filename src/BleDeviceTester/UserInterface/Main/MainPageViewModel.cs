@@ -17,6 +17,9 @@ using Xamarin.Forms;
 using System.Linq;
 using RvLinkDeviceTester.UserInterface.Devices;
 using OneControl.Direct.IdsCanAccessoryBle.ScanResults;
+using RvLinkDeviceTester.UserInterface.Diagnostics;
+using RvLinkDeviceTester.Services;
+using RvLinkDeviceTester.Connections.Rv;
 
 namespace RvLinkDeviceTester.UserInterface.Main
 {
@@ -29,12 +32,14 @@ namespace RvLinkDeviceTester.UserInterface.Main
         public ICommand Continue => _continue ??= new AsyncCommand(async () => await NavigationService.NavigateAsync(nameof(SecondPage)));
 
         private readonly ILogicalDeviceService _logicalDeviceService;
+        private readonly IAppSettings _appSettings;
 
-        public MainPageViewModel(INavigationService navigationService, ILogicalDeviceService logicalDeviceService)
+        public MainPageViewModel(INavigationService navigationService, ILogicalDeviceService logicalDeviceService, IAppSettings appSettings)
             : base(navigationService)
         {
             _logicalDeviceService = logicalDeviceService;
             ShowNoDevicesView = Devices.Count == 0;
+            _appSettings = appSettings;
         }
 
         #region Lifecycle
@@ -44,6 +49,9 @@ namespace RvLinkDeviceTester.UserInterface.Main
         public async Task OnResumeAsync(ResumeReason reason, INavigationParameters? parameters, CancellationToken resumePauseCancellationToken)
         {
             UpdateDeviceList();
+
+            //If connection is lost, let user know
+            ShowNotConnectedMessage = (_appSettings.SelectedRvGatewayConnection.ToString().Contains("No Connection") && !ShowNoDevicesView);
         }
         #endregion
 
@@ -101,29 +109,16 @@ namespace RvLinkDeviceTester.UserInterface.Main
 
             //Launch Sensor Page
             var navigationParameter = new NavigationParameters();
-            navigationParameter.Add("sensor", sensorSelected);
+            navigationParameter.Add("device", sensorSelected);
 
-            await NavigationService.NavigateAsync(nameof(GenericSensorPage), navigationParameter);
+            await NavigationService.NavigateAsync(nameof(GenericDevicePage), navigationParameter);
 
         }
 
 
         private ICommand? _addCommand;
-
         public ICommand AddCommand => _addCommand ??= new DelegateCommand(async () =>
         {
-            //Stiff arm add device page if blue tooth is not enabled
-            //if (!_deviceSettingsService.IsBluetoothEnabled && DeviceInfo.Instance.Variant != DeviceVariant.Simulator)
-            //{
-            //    ShowBluetoothPermissionRequest = true;
-            //}
-            //else
-            //{
-            //    Navigating = true;
-            //    await NavigateAsync(nameof(AddAndManageDevicesPage));
-            //    Navigating = false;
-            //}
-
             Navigating = true;
             await NavigationService.NavigateAsync(nameof(AddAndManageDevices.AddAndManageDevicesPage));
             //await NavigationService.NavigateAsync(nameof(DevicePage));
@@ -131,11 +126,18 @@ namespace RvLinkDeviceTester.UserInterface.Main
         }, () => !Navigating).ObservesProperty(() => Navigating);
 
         private ICommand? _goToSettings;
-
         public ICommand GoToSettings => _goToSettings ??= new DelegateCommand(async () =>
         {
             Navigating = true;
             await NavigationService.NavigateAsync(nameof(Settings.SettingsPage));
+            Navigating = false;
+        }, () => !Navigating).ObservesProperty(() => Navigating);
+
+        private ICommand? _goToDiagnosticsPage;
+        public ICommand GoToDiagnosticsPage => _goToDiagnosticsPage ??= new DelegateCommand(async () =>
+        {
+            Navigating = true;
+            await NavigationService.NavigateAsync(nameof(Diagnostics.MyRvLinkDiagnosticsPage));
             Navigating = false;
         }, () => !Navigating).ObservesProperty(() => Navigating);
 
@@ -153,6 +155,15 @@ namespace RvLinkDeviceTester.UserInterface.Main
             get => _showNoDevicesView;
             set => SetProperty(ref _showNoDevicesView, value);
         }
+
+        private bool _showNotConnectedMessage;
+
+        public bool ShowNotConnectedMessage
+        {
+            get => _showNotConnectedMessage;
+            set => SetProperty(ref _showNotConnectedMessage, value);
+        }
+
 
         /// <summary>
         /// This method allows us to sort Device Cell's by their name, expect for TankSensors that we

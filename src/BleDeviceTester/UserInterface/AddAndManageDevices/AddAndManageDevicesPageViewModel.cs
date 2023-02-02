@@ -41,12 +41,12 @@ namespace RvLinkDeviceTester.UserInterface.AddAndManageDevices
             Navigating = false;
         }, () => !Navigating).ObservesProperty(() => Navigating);
 
-        private ICommand? _goToMacConnection;
+        private ICommand? _goToSearchForDevicesConnection;
 
-        public ICommand GoToMacConnection => _goToMacConnection ??= new DelegateCommand(async () =>
+        public ICommand GoToSearchForDevicesConnection => _goToSearchForDevicesConnection ??= new DelegateCommand(async () =>
         {
             Navigating = true;
-            await NavigationService.NavigateAsync(nameof(MacAddressPair.MacAddressPairingPage));
+            await NavigationService.NavigateAsync(nameof(SearchForDevicesPair.SearchForDevicesPairingPage));
             Navigating = false;
         }, () => !Navigating).ObservesProperty(() => Navigating);
 

@@ -147,8 +147,7 @@ namespace RvLinkDeviceTester
 
                     var logicalDeviceService = new LogicalDeviceService(options);
 
-                    //With the BleDevice Tester app, we currently want all device to follow through the same logical device so only the one factory gets registered.
-                    logicalDeviceService.RegisterLogicalDeviceFactory(new LogicalDeviceGenericSensorFactory());
+                    logicalDeviceService.RegisterAllLogicalDeviceFactories();
 
                     RegisterLogicalDeviceExtensions(logicalDeviceService);
 
